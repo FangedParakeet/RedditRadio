@@ -14,24 +14,23 @@ class ApplicationController < ActionController::Base
   helper_method :mobile_device?
 
   def prepare_for_mobile
-    length = select_domain_for_cookie
     if params[:mobile]
       if params[:mobile] == '0'
-        cookies.delete(:mobile_param, domain: :all, tld_length: length )
+        cookies.delete(:mobile_param, domain: :all)
       else
-        cookies[:mobile_param] = { value: 'ok', domain: :all, tld_length: length }
+        cookies[:mobile_param] = { value: 'ok', domain: :all}
       end
     elsif mobile_device?
-      cookies[:mobile_param] = { value: 'ok', domain: :all, tld_length: length }
+      cookies[:mobile_param] = { value: 'ok', domain: :all}
     end
   end
   
-  def select_domain_for_cookie
-    if Rails.env.production?
-      3
-    elsif Rails.env.development?
-      2
-    end
-  end
-  helper_method :select_domain_for_cookie
+  # def select_domain_for_cookie
+  #   if Rails.env.production?
+  #     3
+  #   elsif Rails.env.development?
+  #     2
+  #   end
+  # end
+  # helper_method :select_domain_for_cookie
 end

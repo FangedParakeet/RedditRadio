@@ -15,6 +15,7 @@
 			ytplayer = document.getElementById("myytplayer");
 			ytplayer.playVideo();
 			ytplayer.addEventListener("onStateChange", "onFinish");
+			ytplayer.addEventListener("onError", "onPlayerError");
 		}
 
 		function onFinish(newState) {
@@ -31,6 +32,43 @@
 				mediaCount = mediaCount + 1;
 			}
 		}
+		
+		function onPlayerError(event) {
+			var notice;
+			if (allEmbeds.length == mediaCount) {
+				mediaCount = 0;
+			}
+			var nextEmbed = allEmbeds[mediaCount];
+			var nextTitle = allTitles[mediaCount];
+			var nextSub = allSubs[mediaCount];
+			var nextType = allTypes[mediaCount];
+			var nextPermalink = allPermalinks[mediaCount];
+			switch(event.data) {
+				case 2:
+					notice = "Something went wrong with this video. Sorry. :(";
+					break;
+				case 100:
+					notice = "This video was not found. Sorry. :(";
+					break;
+				case 101:
+					notice = "The meanie who owns this video has banned embeds. Sorry. :(";
+					break;
+				case 150:
+					notice = "The meanie who owns this video has banned embeds. Sorry. :(";
+					break;
+				default:
+					notice = "Something went kaput. Sorry. :(";
+					break;
+			}
+			$('#error_notice').html(notice);
+			$('#error_notice').fadeIn();
+			setTimeout(function(){
+				$.get('next', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+				mediaCount = mediaCount + 1;
+				$('#error_notice').fadeOut();
+			}, 2500);
+		}
+		
 	}
 	else if(first_type === "vimeo") {
 		$(document).ready(function() {
@@ -78,6 +116,25 @@
 				$.get('next', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
 				mediaCount = mediaCount + 1;
 			}
+		});
+		
+		soundcloud.addEventListener('onPlayerError', function(player, data) {
+			var notice = "Something went kaput. Sorry. :(";
+			if (allEmbeds.length == mediaCount) {
+				mediaCount = 0;
+			}
+			var nextEmbed = allEmbeds[mediaCount];
+			var nextTitle = allTitles[mediaCount];
+			var nextSub = allSubs[mediaCount];
+			var nextType = allTypes[mediaCount];
+			var nextPermalink = allPermalinks[mediaCount];
+			$('#error_notice').html(notice);
+			$('#error_notice').fadeIn();
+			setTimeout(function(){
+				$.get('next', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+				mediaCount = mediaCount + 1;
+				$('#error_notice').fadeOut();
+			}, 2500);
 		});
 
 		var flashvars = {
@@ -134,19 +191,19 @@
 		</div>
 		<div class="clear"></div>
 		<div id="herein_vid">
-				<% if @types.first == "yt" %>
-					<%= render 'youtube', title: @titles.first, permalink: @permalinks.first %>
-				<% elsif @types.first == "vimeo" %>
-					<%= render 'vimeo', title: @titles.first, permalink: @permalinks.first, embed: @embeds.first %>
-				<% elsif @types.first == "soundcloud" %>
-					<%= render 'soundcloud', title: @titles.first, permalink: @permalinks.first %>
-				<% end %>
+			<% if @types.first == "yt" %>
+				<%= render 'youtube', title: @titles.first, permalink: @permalinks.first %>
+			<% elsif @types.first == "vimeo" %>
+				<%= render 'vimeo', title: @titles.first, permalink: @permalinks.first, embed: @embeds.first %>
+			<% elsif @types.first == "soundcloud" %>
+				<%= render 'soundcloud', title: @titles.first, permalink: @permalinks.first %>
+			<% end %>
+			<div id="error_notice">Testing one two three let's go</div>
 			<div id="nextbutt">
 				<div class="stacked button" id="bluechip" onclick="skipMedia()">
 					NEXT
 				</div>
 			</div>
-		</div>
 	</div>
 	<div class="clear"></div>
 	<div id="cardsdeckr"></div>
