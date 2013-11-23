@@ -1,0 +1,9 @@
+<h2>Sign In With Reddit</h2>
+
+<%= form_tag signin_url do %>
+  <%= label_tag "Username:" %>
+  <%= text_field_tag "email" %><br />
+  <%= label_tag "Password:" %>
+  <%= password_field_tag "password" %><br />
+  <%= submit_tag "Enter" %>
+<% end %>

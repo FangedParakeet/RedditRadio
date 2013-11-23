@@ -1,0 +1,7 @@
+$('.subreddit<%= j(@remove.to_s) %>').hide('slide', {direction: 'up'}, 150);
+setTimeout(function(){
+  $(".subreddit<%= j(@remove.to_s) %>").remove();
+  }, 150);
+setTimeout(function(){
+  $('.ui-effects-wrapper').remove();
+}, 150);

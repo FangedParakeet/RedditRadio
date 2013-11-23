@@ -1,0 +1,8 @@
+<%= form_tag shuffle_url do %>
+  <%= render 'subreddit', :sub => sub %>
+	<div id="submit">
+		<div class="stacked" id="chip">
+			<%= submit_tag "GO", class: 'button' %>
+		</div>
+	</div>
+<% end %>

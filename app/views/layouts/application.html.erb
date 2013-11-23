@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Subreddit Shuffler</title>
+	<% if cookies[:mobile_param]%>
+		<style type="text/css" media="screen">@import "/jqt/themes/css/apple.css";</style>
+		<script src="jqt/jqtouch.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="jqt/lib/jquery-1.7.min.js" type="application/x-javascript" charset="utf-8"></script>
+		<script src="jqt/jqtouch-jquery.min.js" type="application/x-javascript" charset="utf-8"></script>
+	<% else %>
+	  <%= stylesheet_link_tag "application", :media => "all" %>
+		<script src="jqt/lib/jquery-2.0.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<% end %>
+	<%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <link rel="shortcut icon" href="/assets/shuffler_logo.ico" >
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		<% if cookies[:mobile_param] %>
+			window.jQT = new $.jQTouch({formSelector: '.form'});
+		<% else %>	
+				$('#logo_front_back').hover(
+					function() {
+						var hue = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+						$(this).css('background', hue);
+					},
+					function() {
+						$(this).css('background', '#c29834');
+					});
+			
+					if($('#chip').length > 0){
+						$('#chip').hover(
+							function() {
+								$('#cardsace').addClass('rise');
+							},
+							function(){
+								$('#cardsace').removeClass('rise');
+							});
+					}
+			
+					if($('#nextbutt').length > 0) {
+						$('#nextbutt').hover(
+							function() {
+								$('#cardsjoker').addClass('riser');
+							},
+							function() {
+								$('#cardsjoker').removeClass('riser');
+							});
+					}	
+						
+			<% end  %>
+		});
+	</script>
+	
+</head>
+
+<body>
+	<% if cookies[:mobile_param] %>
+		<div id="jqt">
+			<%= yield %>
+		</div>
+		
+	<% else %>
+	<div id="container">
+		<a href="<%= root_url %>">
+			<div id="logo">
+				<div id="logo_back">
+					<div id="logo_front_back">
+						<div id="logo_front"></div>
+					</div>
+				</div>
+		  </div>
+		</a>
+	      <%= yield %>
+	<div class="clear"></div>
+	</div>
+	<% end %>
+</body>
+
+</html>

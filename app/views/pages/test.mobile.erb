@@ -1,0 +1,60 @@
+<div id="main" class="current">
+	<div class="toolbar">
+		<a class="back" rel="external" href="?mobile=0">Full Site</a>
+		<h1>SUBREDDIT SHUFFLER</h1>
+		<a class="button slideup" href="#about_this">About</a>
+	</div>
+	<h2>Choose Subreddits</h2>
+	<form id="choose" action="<%= test_url %>" method="get">
+		<ul class="rounded" id="inputs">
+			<li id="sub1">
+				<input type="text" name="subin1" placeholder="Name:" id="subin1"></input>
+			</li>
+		</ul>
+		<ul class="rounded">
+			<li>
+				<button class="redButton" style="width:100px" onclick="addSub();">Add</button>
+			</li>
+			<% if flash[:notice] %>
+				<li>
+					<%= flash[:notice] %>
+				</li>
+			<% end %>
+			<li>
+				<input type="submit" class="redButton" value="GO" style="width:100px"></input>
+			</li>
+		</ul>
+	</form>
+</div>
+
+<div id="about_this">
+	<div class="scroll" style="text-align: center; line-height: 200%;">
+		<p><strong>Mix together audio & video content from your favourite Reddit subreddits.</strong></p>
+		<p><strong>Pick some choice subreddits and shuffle away.</strong></p>
+		<p>Samir Merchant, 2013</p>
+		<p><a href="#" class="greenButton goback">Back</a></p>
+	</div>
+</div>
+
+<div id="test">
+	<div class="toolbar">
+		<a class="back" href="#main">Back</a>
+		<h1>Test</h1>
+	</div>
+	<ul class="rounded">
+		<li>Fucking</li>
+		<li>Hell</li>
+	</ul>
+</div>
+
+<div id="somethingelse">
+	<div class="toolbar">
+		<a class="back" rel="external" href="#main">Back</a>
+		<h1>SHUFFLE</h1>
+	</div>
+	<ul class="rounded">
+		<li>List</li>
+		<li>of</li>
+		<li>Shit</li>
+	</ul>
+</div>

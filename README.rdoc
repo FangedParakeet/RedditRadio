@@ -1,0 +1,5 @@
+== Subreddit Shuffler
+
+Shuffles and autoplays audio/video content from chosen Reddit subreddits.
+
+Currently functional with YouTube--Vimeo & SoundCloud coming soon...

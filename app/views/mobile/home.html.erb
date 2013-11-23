@@ -1,0 +1,91 @@
+<script type="text/javascript">
+	var i=2;
+	function addSub(){
+		var node=document.createElement("li");
+		node.id = "sub"+i;
+		var input = document.createElement("input");
+		input.type = "text";
+		input.name = "subin"+i;
+		input.id = "subin"+i;
+		input.placeholder = "Name:";
+		node.appendChild(input);
+		var button = document.createElement('button');
+		$(button).attr('class', 'grayButton');
+		button.innerHTML="Remove";
+		button.type="button";
+		$(button).attr('onclick', 'removeSub('+i+');');
+		node.appendChild(button);
+		$('#inputs')[0].appendChild(node);
+		i++;
+		delete window.player;
+	}
+	
+	function removeSub(num){
+		var elem = $('#sub'+num);
+		$(elem).remove();
+	}	
+		
+	$(document).on('ajaxStart', function(){    
+		$('#loading').addClass('current');
+	});
+	$(document).on('ajaxStop', function(){
+    $('#loading').removeClass('current');
+	});
+	
+	
+</script>
+<div id="main" class="current">
+	<div class="toolbar">
+		<a class="back" rel="external" href="<%= root_url(mobile: '0') %>">Full Site</a>
+		<h1>SUBREDDIT SHUFFLER</h1>
+		<a class="button slideup" href="#about_this">About</a>
+	</div>
+	<h2>Choose Subreddits</h2>
+	<h1 id="notice" style="display:none"></h1>
+	<%= form_tag mobile_form2_url, id: 'subform', method: 'get', remote: true do %>
+		<ul class="rounded" id="inputs">
+			<li id="sub1">
+				<%= text_field_tag "subin1", "", placeholder: "Name:" %>
+			</li>
+		</ul>
+		<% if flash[:notice] %>
+		<ul>
+			<li>
+				<%= flash[:notice] %>
+			</li>
+		</ul>
+		<% end %>
+		
+				<button type="button" class="redButton" style="display:inline;" onclick="addSub();">Add</button>
+				<%= submit_tag "GO", class: 'greenButton', id: 'submit', style:"display:inline"%>
+	<% end %>
+</div>
+
+<div id="loading"></div>
+
+<div id="about_this">
+	<div class="scroll" style="text-align: center; line-height: 200%;">
+		<p><h2>Mix together audio & video content from your favourite Reddit subreddits.</h2></p>
+		<p><h2>Pick some choice subreddits and shuffle away.</h2></p>
+		<p><h4 style="color: red">*Mobile page currently compatible with YouTube & Vimeo.</h4></p>
+		<p><a href="#" class="greenButton goback">Back</a></p>
+	</div>
+</div>
+
+<div id="shuffler">
+	<div class="toolbar">
+		<a class="back" id="escape" rel="external" href="#main">Back</a>
+		<h1>SUBREDDIT SHUFFLER</h1>
+	</div>
+	<ul class="metal" id="append">
+		<li id="subreddit" class="arrow"></li>
+		<li id="permalink" class="arrow"></li>
+		<li id="video">
+			<div id="yt"></div>
+			<div id="vim"></div>
+		</li>
+		<li id="next_mobile" class="forward">Next</li>
+	</ul>
+	<ul class="metal" id="subreddits">
+	</ul>
+</div>

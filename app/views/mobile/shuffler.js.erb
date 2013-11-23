@@ -1,0 +1,138 @@
+<% if flash[:notice] %>
+  $('#notice').html("<%= j(flash[:notice]) %>");
+  $('#notice').fadeIn();
+  setTimeout(function(){$('#notice').fadeOut();}, 2000);
+<% else %>
+  window.allEmbeds = <%= raw @embeds %>;
+	window.allTitles = <%= raw @titles %>;
+	window.allSubs = <%= raw @subs %>;
+	window.allTypes = <%= raw @types %>;
+	window.allPermalinks = <%= raw @permalinks %>;
+	window.mediaCount = 1;
+	first_type = allTypes[0];
+	$('#permalink').html('<a rel="external" target="blank" href="'+allPermalinks[0]+'">'+allTitles[0]+'</a>');
+	$('#subreddit').html('<a rel="external" target="blank" href="http://reddit.com/r/'+allSubs[0]+'">/r/'+allSubs[0]+'</a>');
+	if(first_type == "yt"){
+	  <% if cookies[:repeat] && @types[0] == 'yt' %>
+      $('#vim').hide();
+      $('#yt').show();
+	    player.loadVideoById({videoId: '<%= j(@embeds.first) %>'});
+	    playVideo();	    
+	  <% else %>
+  	  $('#vim').hide();
+      $('#yt').show();
+  	  $('#yt').append('<div id="player"></div>');
+  	  // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+
+        tag.src = '/jqt/lib/iframe_api.js';
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // 3. This function creates an <iframe> (and YouTube player)
+        //    after the API code downloads.
+        function onYouTubeIframeAPIReady() {
+          window.player = new YT.Player('player', {
+            height: '390px',
+            width: '100%',
+      			fs: '1',
+            videoId: '' + allEmbeds[0],
+            events: {
+              'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange
+            }
+          });
+        }
+
+        // 4. The API will call this function when the video player is ready.
+        function onPlayerReady(event) {
+          event.target.playVideo();
+        }
+
+        // 5. The API calls this function when the player's state changes.
+        //    The function indicates that when playing a video (state=1),
+        //    the player should play for six seconds and then stop.
+        var done = false;
+        function onPlayerStateChange(event) {
+          if (event.data == YT.PlayerState.ENDED) {
+      			if (allEmbeds.length == mediaCount) {
+    					mediaCount = 0;
+    				}
+    				var nextEmbed = allEmbeds[mediaCount];
+    				var nextTitle = allTitles[mediaCount];
+    				var nextSub = allSubs[mediaCount];
+    				var nextType = allTypes[mediaCount];
+    				var nextPermalink = allPermalinks[mediaCount];
+    				$.get('nextmob', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+    				mediaCount = mediaCount + 1;
+          }
+        }
+        function stopVideo() {
+          player.stopVideo();
+        }   
+        function playVideo() {
+          player.playVideo();
+        }
+      <% end %>
+      <% if @types[0] == 'yt' %>
+        <% cookies[:repeat] = { value: 'yes', domain: :all} %>
+      <% end %>
+      
+	}
+	else if(first_type == "vimeo") {
+	  $(document).ready(function() {
+	    $('#vim').html('<iframe id="vimeoplayer" src="<%= @embeds.first %>" width="100%" height="390px" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
+	    $('#yt').hide();
+	    $('#vim').show();
+			var iframe = $('#vim iframe')[0], vimplayer = $f(iframe);
+			
+			// When the player is ready, add listeners for pause, finish, and playProgress
+			vimplayer.addEvent('ready', function() {
+				vimplayer.api('play');
+		    vimplayer.addEvent('finish', onFinish);
+			});
+
+			function onFinish(id) {
+				if (allEmbeds.length == mediaCount) {
+					mediaCount = 0;
+				}
+				var nextEmbed = allEmbeds[mediaCount];
+				var nextTitle = allTitles[mediaCount];
+				var nextSub = allSubs[mediaCount];
+				var nextType = allTypes[mediaCount];
+				var nextPermalink = allPermalinks[mediaCount];
+				$.get('nextmob', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+				mediaCount = mediaCount + 1;
+			}
+		});
+	}
+	
+	$('#next_mobile').click(function(){
+	  if (allEmbeds.length == mediaCount) {
+			mediaCount = 0;
+		}
+		var nextEmbed = allEmbeds[mediaCount];
+		var nextTitle = allTitles[mediaCount];
+		var nextSub = allSubs[mediaCount];
+		var nextType = allTypes[mediaCount];
+		var nextPermalink = allPermalinks[mediaCount];
+		$.get('nextmob', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+		mediaCount = mediaCount + 1;
+	});	
+	
+	$('#escape').click(function() {
+	  if(allTypes[mediaCount-1] == 'yt'){
+	    stopVideo();
+	  }
+	  else if(allTypes[mediaCount-1] == 'vimeo'){
+	    $('#vim').empty();
+	  }
+	  $('#permalink').empty();
+	  $('#subreddit').empty();
+	});
+  jQT.goTo('#shuffler', 'slideleft');
+  
+  
+<% end %>
+
+  

@@ -1,0 +1,42 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		var outside = true;
+		$('#info_box').hover(
+			function(){
+			outside = false;
+		}, 
+		function(){
+			outside = true;
+		});
+		$('#cover').click(function(){
+			if(outside) {
+				$('#cover').fadeToggle(300);
+			}
+		});
+	})
+</script>
+<div id="cover">
+	<div id="info_box">
+		<p>Mix together audio & video content from your favourite Reddit subreddits.</p>
+		<p>Pick some choice subreddits and shuffle away.</p>
+		<p><%= link_to 'Close', sesame_url, remote: true %></p>
+	</div>
+</div>
+<div id="content">	
+	<div id="tabletop">
+		   <h1>Select Subreddit</h1>
+      <%= render 'shuffle', :sub => "1" %>
+    <div class="notice">
+      <%= flash[:notice] %>
+    </div>
+	</div>
+	<div class="clear"></div>
+	<div id="mobilelink">
+		<a href='<%= root_url(mobile:'1') %>'><span style="display: inline-block;">Go Mobile</span></a>
+	</div>
+	<div id="info"><%= link_to '?', sesame_url, remote: true %></div>
+	<div id="cardsdeck"></div>
+	<div id="cardsace"></div>
+</div>
+    
+  

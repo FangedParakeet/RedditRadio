@@ -1,0 +1,7 @@
+<div class="subreddit<%= sub %>">
+  <%= label_tag "Subreddit Name:", "NAME:" %>
+  <%= text_field_tag "subreddit#{sub}" %>
+</div>
+<div class="another">
+	<%= link_to "+", add_url(sub: sub), remote: true %>
+</div>

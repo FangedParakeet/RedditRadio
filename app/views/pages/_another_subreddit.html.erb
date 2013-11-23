@@ -1,0 +1,12 @@
+<div class="subreddit<%= sub %> slider">
+  <%= label_tag "Subreddit Name:", "NAME:" %>
+	<span class="footlong">
+		<%= text_field_tag "subreddit#{sub}" %>
+		<span class="cancel">
+			<%= link_to "X", remove_url(sub: sub), remote: true %>
+		</span>
+	</span>
+</div>
+<div class="another">
+  <%= link_to "+", add_url(sub: sub), remote: true %>
+</div>
