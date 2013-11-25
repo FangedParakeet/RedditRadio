@@ -7,6 +7,7 @@ if("<%= j(@type) %>" == "yt") {
     $('#sc').hide();
     $('#yt').show();
     player.loadVideoById({videoId: '<%= j(@embed) %>'});
+    playVideo();	    
   <% else %>
     $('#vim').hide();
     $('#sc').hide();
@@ -29,7 +30,8 @@ if("<%= j(@type) %>" == "yt") {
           videoId: '' + allEmbeds[0],
           events: {
             'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
+            'onStateChange': onPlayerStateChange,
+            'onError': onPlayerError
           }
         });
       }
@@ -56,6 +58,45 @@ if("<%= j(@type) %>" == "yt") {
   				$.get('nextmob', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
   				mediaCount = mediaCount + 1;
         }
+      }
+      function onPlayerError(event) {
+        var notice;
+  			if (allEmbeds.length == mediaCount) {
+  				mediaCount = 0;
+  			}
+  			var nextEmbed = allEmbeds[mediaCount];
+  			var nextTitle = allTitles[mediaCount];
+  			var nextSub = allSubs[mediaCount];
+  			var nextType = allTypes[mediaCount];
+  			var nextPermalink = allPermalinks[mediaCount];
+  			switch(event.data) {
+  				case 2:
+  					notice = "Something went wrong with this video. Sorry. :(";
+  					break;
+  				case 5:
+  				  notice = "This video cannot be played on mobile. Sorry. :(";
+  				  break;
+  				case 100:
+  					notice = "This video was not found. Sorry. :(";
+  					break;
+  				case 101:
+  					notice = "The meanie who owns this video has banned embeds. Sorry. :(";
+  					break;
+  				case 150:
+  					notice = "The meanie who owns this video has banned embeds. Sorry. :(";
+  					break;
+  				default:
+  					notice = "Something went kaput. Sorry. :(";
+  					break;
+  			}
+  			$('#broken_notice').html(notice);
+  			$('#broken_notice').show();
+  			setTimeout(function(){
+  				$.get('nextmob', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+  				mediaCount = mediaCount + 1;
+  				$('#broken_notice').hide();
+  			}, 2500);
+  			
       }
       function stopVideo() {
         player.stopVideo();
@@ -140,6 +181,25 @@ else if("<%= j(@type) %>" == "soundcloud") {
     		mediaCount = mediaCount + 1;
     		$('#sc').empty();
       }
+    });
+    
+    widget.bind(SC.Widget.Events.ERROR, function(){
+      var notice = "Something went kaput. Sorry. :(";
+			if (allEmbeds.length == mediaCount) {
+				mediaCount = 0;
+			}
+			var nextEmbed = allEmbeds[mediaCount];
+			var nextTitle = allTitles[mediaCount];
+			var nextSub = allSubs[mediaCount];
+			var nextType = allTypes[mediaCount];
+			var nextPermalink = allPermalinks[mediaCount];
+			$('#broken_notice').html(notice);
+			$('#broken_notice').show();
+			setTimeout(function(){
+				$.get('nextmob', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+				mediaCount = mediaCount + 1;
+				$('#broken_notice').hide();
+			}, 2500);
     });
 
   }());
