@@ -1898,11 +1898,12 @@ body {
 
 /* line 13, ../scss/apple.scss */
 #jqt > * {
-  background-image: -webkit-gradient(linear, 0% 50%, 7 50%, color-stop(0%, rgba(197, 205, 212, 0)), color-stop(14.286%, rgba(197, 205, 212, 0)), color-stop(14.286%, #310000), color-stop(100%, #1c0000));
+  background: #480000;
+  background-image: -webkit-gradient(linear, 0% 50%, 7 50%, color-stop(0%, rgba(197, 205, 212, 0)), color-stop(14.286%, rgba(197, 205, 212, 0)), color-stop(14.286%, #310000), color-stop(100%, #1C0000));
   background-image: -webkit-linear-gradient(left, rgba(197, 205, 212, 0), rgba(197, 205, 212, 0) 1px, #310000 1px, #1c0000 7px);
   background-image: linear-gradient(left, rgba(197, 205, 212, 0), rgba(197, 205, 212, 0) 1px, #310000 1px, #1c0000 7px);
-  background-size: 7px;
-}
+/*  background-size: 7px;
+*/}
 /* line 23, ../scss/apple.scss */
 #jqt .toolbar {
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(255, 255, 255, 0.15)), color-stop(100%, rgba(255, 255, 255, 0))), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #493115), color-stop(50%, #371b06), color-stop(51%, #27190c), color-stop(100%, #25140a));
