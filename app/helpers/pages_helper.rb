@@ -103,12 +103,24 @@ module PagesHelper
           flash[:notice] = "Sorry, something snapped. Try again please!"
         end
         
-      elsif (post["data"]["domain"] == "soundcloud.com") && !cookies[:mobile_param]
+      elsif (post["data"]["domain"] == "soundcloud.com")
         if post["data"]["url"]
           url = post["data"]["url"]
+          if cookies[:mobile_param]
+            begin 
+              resolve = JSON.parse(open("http://api.soundcloud.com/resolve.json?url=#{url}&client_id=d3750bf74d82aac4548040d9af90fcef").read)
+              if resolve["id"]
+                url = resolve["id"].to_s
+              else
+                url = ""
+              end
+            rescue
+              url = ""
+            end
+          end
         end
         begin
-          if url[/(soundcloud)/]
+          if url[/(soundcloud)/] || url[/^\d+$/]
             title = post["data"]["title"]
             permalink = post["data"]["permalink"]
             post = {title: title, embed: url, subreddit: name, permalink: permalink, type: "soundcloud"}

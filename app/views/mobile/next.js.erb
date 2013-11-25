@@ -1,13 +1,15 @@
 $('#permalink').html('<a rel="external" target="blank" href="<%= j(@permalink) %>"><%= j(@title) %></a>');
 $('#subreddit').html('<a rel="external" target="blank" href="http://reddit.com/r/<%= j(@sub) %>">/r/<%= j(@sub) %></a>');
 
-if("<%= @type %>" == "yt") {
+if("<%= j(@type) %>" == "yt") {
   <% if cookies[:repeat] && @type == 'yt' %>
     $('#vim').hide();
+    $('#sc').hide();
     $('#yt').show();
     player.loadVideoById({videoId: '<%= j(@embed) %>'});
   <% else %>
     $('#vim').hide();
+    $('#sc').hide();
     $('#yt').show();
 	  $('#yt').append('<div id="player"></div>');
 	  // 2. This code loads the IFrame Player API code asynchronously.
@@ -67,10 +69,11 @@ if("<%= @type %>" == "yt") {
   <% end %>
 	  
 }
-else if("<%= @type %>" == "vimeo") {
+else if("<%= j(@type) %>" == "vimeo") {
   $(document).ready(function() {
-    $('#vim').html('<iframe id="vimeoplayer" src="<%= @embed %>" width="100%" height="390px" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
+    $('#vim').html('<iframe id="vimeoplayer" src="<%= j(@embed) %>" width="100%" height="390px" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>');
     $('#yt').hide();
+    $('#sc').hide();
     $('#vim').show();
 		var iframe = $('#vim iframe')[0], vimplayer = $f(iframe);
 
@@ -94,3 +97,52 @@ else if("<%= @type %>" == "vimeo") {
 		}
 	});
 }
+else if("<%= j(@type) %>" == "soundcloud") {
+  $('#sc').html('<iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F<%= j(@embed) %>&show_artwork=true"></iframe>');
+  $('#yt').hide();
+  $('#vim').hide();
+  $('#sc').show();
+  
+  (function(){
+    var songsLast;
+    var songIndex;
+    
+    function getLength(objects) {
+      songsLast = objects.length - 1;
+    }
+    
+    function getIndex(index) {
+      songIndex = index;
+    }
+    
+    var widgetIframe = document.getElementById('sc-widget'), widget = SC.Widget(widgetIframe);
+
+    widget.bind(SC.Widget.Events.READY, function() {
+      widget.play();
+      widget.getSounds(getLength);
+    });
+    
+    widget.bind(SC.Widget.Events.FINISH, function() {
+      widget.getCurrentSoundIndex(getIndex);
+      if (songIndex != songsLast) {
+        widget.next();
+      }
+      else {
+        if (allEmbeds.length == mediaCount) {
+    			mediaCount = 0;
+    		}
+    		var nextEmbed = allEmbeds[mediaCount];
+    		var nextTitle = allTitles[mediaCount];
+    		var nextSub = allSubs[mediaCount];
+    		var nextType = allTypes[mediaCount];
+    		var nextPermalink = allPermalinks[mediaCount];
+    		$.get('nextmob', {embed: nextEmbed, title: nextTitle, sub: nextSub, type: nextType, permalink: nextPermalink});
+    		mediaCount = mediaCount + 1;
+    		$('#sc').empty();
+      }
+    });
+
+  }());
+  
+}
+
