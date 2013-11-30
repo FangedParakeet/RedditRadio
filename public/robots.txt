@@ -13,5 +13,13 @@ Disallow: /add
 User-Agent: Googlebot
 Disallow: /remove
 
+User-Agent: Googlebot
+Disallow: /add?sub=
+
+User-Agent: Googlebot
+Disallow: /remove?sub=
+
+
+
 
 
